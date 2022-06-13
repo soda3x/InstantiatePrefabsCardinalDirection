@@ -7,6 +7,7 @@ using UnityEngine;
 // * Spawn a random prefab from a list of selected prefabs,
 // * The spawn rate will be random between a min and max value,
 // * The direction in which the prefab is facing can be selected and changed
+// * If enabled, the spawned prefabs will de-spawn after x seconds after they are created
 //
 // * It is import to note that this script is written with the assumption 
 // * that +Z values are heading north and -Z values are heading south
@@ -22,11 +23,15 @@ public class InstantiatePrefab : MonoBehaviour
     private System.Random random;
     private Transform targetTransform;
     private float lastSeconds;
+    public bool deleteSpawnedPrefabs;
+    public int deleteDelaySeconds;
+    private Dictionary<GameObject, System.DateTime> spawnedPrefabs;
 
     // Start is called before the first frame update
     void Start()
     {
         random = new System.Random();
+        spawnedPrefabs = new Dictionary<GameObject, System.DateTime>();
         lastSeconds = 0f;
 
         // This will set the initial target transform to the parent object's transform
@@ -41,6 +46,7 @@ public class InstantiatePrefab : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (Time.time - lastSeconds >= GetRandomValueBetweenRange(minSpawnRateSeconds, maxSpawnRateSeconds))
         {
             lastSeconds = Time.time;
@@ -51,8 +57,26 @@ public class InstantiatePrefab : MonoBehaviour
             newPosition.y = (float)GetRandomValueBetweenRange(0.2, 3);
             newPosition.z = (float)GetRandomValueBetweenRange(0.3, 5);
             // End Replace
-            GameObject.Instantiate(go, newPosition, GetDirectionAsQuaternion(direction));
+            spawnedPrefabs.Add(GameObject.Instantiate(go, newPosition, GetDirectionAsQuaternion(direction)), System.DateTime.Now);
             Debug.Log("Spawned a " + go.name + " at position: " + newPosition + " facing: " + direction);
+        }
+
+        // Delete the spawned prefabs 'deleteDelaySeconds' seconds after they are spawned
+        if (deleteSpawnedPrefabs)
+        {
+            foreach (KeyValuePair<GameObject, System.DateTime> pair in spawnedPrefabs)
+            {
+                // Skip any destroyed prefabs, these will be null references now
+                if (pair.Key != null)
+                {
+                    // If the creation time + the delete delay is either now or in the past, destroy the prefab
+                    if (System.DateTime.Now >= pair.Value.Add(new System.TimeSpan(0, 0, deleteDelaySeconds)))
+                    {
+                        Debug.Log("Destroyed prefab " + pair.Key.name);
+                        Destroy(pair.Key);
+                    }
+                }
+            }
         }
     }
 
@@ -71,7 +95,7 @@ public class InstantiatePrefab : MonoBehaviour
     }
 
     // Set the spawn position of the GameObject
-    void SetTargetTransform(Transform t)
+    public void SetTargetTransform(Transform t)
     {
         targetTransform = t;
     }
