@@ -444,4 +444,7 @@ MonoBehaviour:
   - {fileID: 8097661083570944938, guid: d350b4f3193eb15469a9f9da662a84c0, type: 3}
   minSpawnRateSeconds: 1
   maxSpawnRateSeconds: 3
+  initialDelaySeconds: 5
   direction: 0
+  deleteSpawnedPrefabs: 1
+  deleteDelaySeconds: 5

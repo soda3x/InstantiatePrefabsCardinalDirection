@@ -19,6 +19,8 @@ public class InstantiatePrefab : MonoBehaviour
     public List<GameObject> prefabs;
     public double minSpawnRateSeconds;
     public double maxSpawnRateSeconds;
+    public double initialDelaySeconds;
+    private bool delayFinished;
     public Direction direction;
     private System.Random random;
     private Transform targetTransform;
@@ -32,7 +34,6 @@ public class InstantiatePrefab : MonoBehaviour
     {
         random = new System.Random();
         spawnedPrefabs = new Dictionary<GameObject, System.DateTime>();
-        lastSeconds = 0f;
 
         // This will set the initial target transform to the parent object's transform
         // This is only done so that targetTransform is never null
@@ -46,34 +47,37 @@ public class InstantiatePrefab : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (Time.time - lastSeconds >= GetRandomValueBetweenRange(minSpawnRateSeconds, maxSpawnRateSeconds))
+        // Allow for initial delay
+        if (Time.time >= initialDelaySeconds)
         {
-            lastSeconds = Time.time;
-            GameObject go = GetRandomPrefab();
-            // Replace with a call to SetTargetTransform
-            Vector3 newPosition = new Vector3();
-            newPosition.x = (float)GetRandomValueBetweenRange(0.1, 5);
-            newPosition.y = (float)GetRandomValueBetweenRange(0.2, 3);
-            newPosition.z = (float)GetRandomValueBetweenRange(0.3, 5);
-            // End Replace
-            spawnedPrefabs.Add(GameObject.Instantiate(go, newPosition, GetDirectionAsQuaternion(direction)), System.DateTime.Now);
-            Debug.Log("Spawned a " + go.name + " at position: " + newPosition + " facing: " + direction);
-        }
-
-        // Delete the spawned prefabs 'deleteDelaySeconds' seconds after they are spawned
-        if (deleteSpawnedPrefabs)
-        {
-            foreach (KeyValuePair<GameObject, System.DateTime> pair in spawnedPrefabs)
+            if (Time.time - lastSeconds >= GetRandomValueBetweenRange(minSpawnRateSeconds, maxSpawnRateSeconds))
             {
-                // Skip any destroyed prefabs, these will be null references now
-                if (pair.Key != null)
+                lastSeconds = Time.time;
+                GameObject go = GetRandomPrefab();
+                // Replace with a call to SetTargetTransform
+                Vector3 newPosition = new Vector3();
+                newPosition.x = (float)GetRandomValueBetweenRange(0.1, 5);
+                newPosition.y = (float)GetRandomValueBetweenRange(0.2, 3);
+                newPosition.z = (float)GetRandomValueBetweenRange(0.3, 5);
+                // End Replace
+                spawnedPrefabs.Add(GameObject.Instantiate(go, newPosition, GetDirectionAsQuaternion(direction)), System.DateTime.Now);
+                Debug.Log("Spawned a " + go.name + " at position: " + newPosition + " facing: " + direction);
+            }
+
+            // Delete the spawned prefabs 'deleteDelaySeconds' seconds after they are spawned
+            if (deleteSpawnedPrefabs)
+            {
+                foreach (KeyValuePair<GameObject, System.DateTime> pair in spawnedPrefabs)
                 {
-                    // If the creation time + the delete delay is either now or in the past, destroy the prefab
-                    if (System.DateTime.Now >= pair.Value.Add(new System.TimeSpan(0, 0, deleteDelaySeconds)))
+                    // Skip any destroyed prefabs, these will be null references now
+                    if (pair.Key != null)
                     {
-                        Debug.Log("Destroyed prefab " + pair.Key.name);
-                        Destroy(pair.Key);
+                        // If the creation time + the delete delay is either now or in the past, destroy the prefab
+                        if (System.DateTime.Now >= pair.Value.Add(new System.TimeSpan(0, 0, deleteDelaySeconds)))
+                        {
+                            Debug.Log("Destroyed prefab " + pair.Key.name);
+                            Destroy(pair.Key);
+                        }
                     }
                 }
             }
