@@ -448,3 +448,4 @@ MonoBehaviour:
   direction: 0
   deleteSpawnedPrefabs: 1
   deleteDelaySeconds: 5
+  randomSeed: 1337

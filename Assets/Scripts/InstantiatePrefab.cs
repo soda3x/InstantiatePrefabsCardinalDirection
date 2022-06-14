@@ -20,19 +20,20 @@ public class InstantiatePrefab : MonoBehaviour
     public double minSpawnRateSeconds;
     public double maxSpawnRateSeconds;
     public double initialDelaySeconds;
-    private bool delayFinished;
     public Direction direction;
+    public bool deleteSpawnedPrefabs;
+    public int deleteDelaySeconds;
+    public int randomSeed;
+    private bool delayFinished;
     private System.Random random;
     private Transform targetTransform;
     private float lastSeconds;
-    public bool deleteSpawnedPrefabs;
-    public int deleteDelaySeconds;
     private Dictionary<GameObject, System.DateTime> spawnedPrefabs;
 
     // Start is called before the first frame update
     void Start()
     {
-        random = new System.Random();
+        random = new System.Random(randomSeed);
         spawnedPrefabs = new Dictionary<GameObject, System.DateTime>();
 
         // This will set the initial target transform to the parent object's transform
