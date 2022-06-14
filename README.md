@@ -13,7 +13,7 @@ For demonstration purposes, the `transform.position` of the spawned Prefab is ra
 
 Follow the comments in the `InstantiatePrefab` script, its clearly shown what to replace.
 
-!["Screenshot"](https://github.com/soda3x/InstantiatePrefabsCardinalDirection/blob/74dcc2a8fb5e4c4584aa618a6007def099fbb92c/screenshot.png)
+!["Screenshot"](https://github.com/soda3x/InstantiatePrefabsCardinalDirection/blob/59f4cca10d1358ad09a2a6a60872590e3d09ece5/screenshot.png)
 
 ## Licence
 
