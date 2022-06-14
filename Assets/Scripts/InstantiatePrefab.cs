@@ -54,14 +54,15 @@ public class InstantiatePrefab : MonoBehaviour
             {
                 lastSeconds = Time.time;
                 GameObject go = GetRandomPrefab();
-                // Replace with a call to SetTargetTransform
+                // Remove and instead call SetTargetTransform from outside this script
                 Vector3 newPosition = new Vector3();
                 newPosition.x = (float)GetRandomValueBetweenRange(0.1, 5);
                 newPosition.y = (float)GetRandomValueBetweenRange(0.2, 3);
                 newPosition.z = (float)GetRandomValueBetweenRange(0.3, 5);
-                // End Replace
-                spawnedPrefabs.Add(GameObject.Instantiate(go, newPosition, GetDirectionAsQuaternion(direction)), System.DateTime.Now);
-                Debug.Log("Spawned a " + go.name + " at position: " + newPosition + " facing: " + direction);
+                targetTransform.position = newPosition;
+                // End Remove
+                spawnedPrefabs.Add(GameObject.Instantiate(go, targetTransform.position, GetDirectionAsQuaternion(direction)), System.DateTime.Now);
+                Debug.Log("Spawned a " + go.name + " at position: " + targetTransform.position + " facing: " + direction);
             }
 
             // Delete the spawned prefabs 'deleteDelaySeconds' seconds after they are spawned
