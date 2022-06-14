@@ -9,9 +9,9 @@ Supports 8-way cardinal directions (N, NW, W, SW, S, SE, E, NE)
 * Positive Z-axis values are heading North and Negative Z-axis values are heading South
 * For rotation, Y = 0 is North, Y = 180 is South
 
-For demonstration purposes, the `transform.position` of the spawned Prefab is randomised. A `SetTargetTransform` method is supplied for calling from outside the script to tell the script where to spawn the prefab.
+For demonstration purposes, the `transform.position` of the spawned Prefab is randomised. A `SetTargetTransform` method is supplied for calling from outside the script to tell the script where to spawn the prefab and the demonstration code should be removed.
 
-Follow the comments in the `InstantiatePrefab` script, its clearly shown what to replace.
+Follow the comments in the `InstantiatePrefab` script, its clearly shown what to remove.
 
 !["Screenshot"](https://github.com/soda3x/InstantiatePrefabsCardinalDirection/blob/59f4cca10d1358ad09a2a6a60872590e3d09ece5/screenshot.png)
 
